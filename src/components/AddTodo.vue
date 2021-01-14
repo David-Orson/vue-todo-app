@@ -23,7 +23,6 @@ export default {
       const newTodo = {
         id: uuid(),
         body: this.body,
-        completed: false,
       };
       this.$emit("add-todo", newTodo);
     },

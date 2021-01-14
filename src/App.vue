@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import Todos from "./components/Todos";
 import AddTodo from "./components/AddTodo";
 
@@ -19,6 +20,7 @@ export default {
   data() {
     return {
       todos: [
+        /* 
         {
           id: 1,
           body: "take out the trash",
@@ -33,17 +35,35 @@ export default {
           id: 3,
           body: "walk the dog",
           completed: false,
-        },
+        }, */
       ],
     };
   },
   methods: {
     deleteTodo(id) {
-      this.todos = this.todos.filter((todo) => todo.id !== id);
+      axios
+        .delete(`http://localhost:8081/api/todos/${id}`)
+        .then((res) => {
+          this.todos = res.data;
+        })
+        .catch((err) => console.error(err));
     },
     addTodo(newTodo) {
-      this.todos = [...this.todos, newTodo];
+      axios
+        .post("http://localhost:8081/api/todos", { id: newTodo.id, body: newTodo.body, completed: false })
+        .then((res) => {
+          this.todos = res.data;
+        })
+        .catch((err) => console.error(err));
     },
+  },
+  created() {
+    axios
+      .get("http://localhost:8081/api/todos")
+      .then((res) => {
+        this.todos = res.data;
+      })
+      .catch((err) => console.error(err));
   },
 };
 </script>
